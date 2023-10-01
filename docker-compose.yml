@@ -1,0 +1,31 @@
+version: '3.8'
+services:
+    redis:
+      image: redis:alpine
+      container_name: redis-finee
+      ports:
+        - "6379:6379"
+      volumes:
+      - ./redisdata:/data
+    web:
+      build: .
+      command: python manage.py runserver 0.0.0.0:8012 --noreload
+     
+      volumes:
+        - .:/AIS_backend/
+        - ./logs:/AIS_backend/logs # Mount a local directory as a volume for the logs directory
+
+      ports:
+        - "8012:8012"
+      env_file:
+      - ./.env
+      container_name: mulhim_backend_stg
+      depends_on:
+        - redis
+      extra_hosts:
+      - "host.docker.internal:172.17.0.1"
+   
+
+
+
+
